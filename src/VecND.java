@@ -129,7 +129,7 @@ public class VecND
 	  ArrayList<Float> newCoords = new ArrayList<Float>();
 	    for(int i = 0; i < this.getDim() - 1; i++)
 	    {
-	      newCoords.add(this.getCoord(i)/ (1 - this.getCoord(this.getDim() - 1)));
+	      newCoords.add(-this.getCoord(i)/ (1 - this.getCoord(this.getDim() - 1)));
 	    }
 	    VecND other = new VecND(newCoords);
 	    return other;
