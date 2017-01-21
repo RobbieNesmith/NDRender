@@ -2,7 +2,6 @@ import java.util.ArrayList;
 
 public class ShapeND
 {
-  private int dim;
   private ArrayList<VecND> vertices;
   private VecND origin;
   private ArrayList<Edge> edges;
@@ -18,7 +17,14 @@ public class ShapeND
 		  translation.setCoord(i, 1);
 		  measure.extrude(translation);
 	  }
+	  measure.calcOrigin();
 	  return measure;
+  }
+  
+  public ShapeND()
+  {
+	  this.vertices = new ArrayList<VecND>();
+	  this.edges = new ArrayList<Edge>();
   }
   
   public ShapeND(ArrayList<VecND> vertices, ArrayList<Edge> edges)
@@ -32,14 +38,6 @@ public class ShapeND
     for(int i = 0; i < edges.size(); i++)
     {
       this.edges.add(edges.get(i));
-    }
-    try
-    {
-      this.dim = this.getVertices().get(0).getDim();
-    }
-    catch(Exception e)
-    {
-      this.dim = 0;
     }
     this.calcOrigin();
   }
@@ -59,6 +57,11 @@ public class ShapeND
     this.vertices.set(id,vertex);
   }
   
+  public void addVertex(VecND vertex)
+  {
+	  this.vertices.add(vertex);
+  }
+  
   public int getNumVerts()
   {
     return this.vertices.size();
@@ -69,6 +72,26 @@ public class ShapeND
     return this.edges;
   }
   
+  public Edge getEdge(int id)
+  {
+	  return this.edges.get(id);
+  }
+  
+  public void setEdge(int id, Edge edge)
+  {
+	  this.edges.set(id, edge);
+  }
+  
+  public void addEdge(Edge edge)
+  {
+	  this.edges.add(edge);
+  }
+  
+  public void addEdge(int v1, int v2)
+  {
+	  this.edges.add(new Edge(v1, v2));
+  }
+  
   public int getNumEdges()
   {
     return this.edges.size();
@@ -76,7 +99,7 @@ public class ShapeND
   
   public int getDim()
   {
-    return this.dim;
+    return this.getVertex(0).getDim();
   }
   
   public VecND getOrigin()
