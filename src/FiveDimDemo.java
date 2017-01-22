@@ -33,7 +33,7 @@ public class FiveDimDemo extends PApplet
 		pushMatrix();
 		translate(width/2,height/2);
 		scale(scale,-scale);
-		cube.rotate(0, 4, (float) (Math.PI/240));
+		//cube.rotate(0, 4, (float) (Math.PI/240));
 		ShapeND cubeRot = cube.copy();
 		cubeRot.rotate(0, 2, (float)Math.PI/6);
 		cubeRot.rotate(1,2,-(float)Math.PI/6);
@@ -49,5 +49,12 @@ public class FiveDimDemo extends PApplet
 		ProcessingNDTools.drawShape2D(this,cubeRot);
 		ProcessingNDTools.drawVertices2D(this, cubeRot, 16/scale);
 		popMatrix();
+	}
+	public void mouseDragged()
+	{
+		float x = (float) (Math.PI / 480) * (mouseX - pmouseX);
+		float y = (float) -(Math.PI / 480) * (mouseY - pmouseY);
+		cube.rotate(0,4,x);
+		cube.rotate(1,4,y);
 	}
 }

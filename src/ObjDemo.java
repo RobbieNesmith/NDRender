@@ -38,7 +38,6 @@ public class ObjDemo extends PApplet
 		pushMatrix();
 		translate(width/2,height/2);
 		scale(scale,-scale);
-		suzeanne.rotate(0, 2, (float) (Math.PI/480));
 		ShapeND suzRot = suzeanne.copy();
 		suzRot.rotate(1,2,-(float)Math.PI/6);
 		VecND trans = VecND.generateOrigin(3);
@@ -47,5 +46,12 @@ public class ObjDemo extends PApplet
 		suzRot = suzRot.stereographicDown();
 		ProcessingNDTools.drawShape2D(this,suzRot);
 		popMatrix();
+	}
+	public void mouseDragged()
+	{
+		float x = (float) (Math.PI / 480) * (mouseX - pmouseX);
+		float y = (float) -(Math.PI / 480) * (mouseY - pmouseY);
+		suzeanne.rotate(0,2,x);
+		suzeanne.rotate(1,2,y);
 	}
 }
