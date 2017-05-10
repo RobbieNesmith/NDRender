@@ -2,7 +2,7 @@ import processing.core.PApplet;
 
 public class SimplexRender extends PApplet
 {
-	float viewWidth = 2;
+	float viewWidth = 3;
 	float scale;
 	ShapeND baseSimplex;
 	ShapeND sierpinskiSimplex;
@@ -18,14 +18,7 @@ public class SimplexRender extends PApplet
 	public void setup()
 	{
 		baseSimplex = ShapeND.generateSimplex(4);
-		sierpinskiSimplex = ShapeND.sierpinskiSimplex(baseSimplex,4);
-		VecND translation = VecND.generateOrigin(5);
-		translation.setCoord(0, -.5f);
-		translation.setCoord(1, -.5f);
-		translation.setCoord(2, -.5f);
-		translation.setCoord(3, -.5f);
-		translation.setCoord(4, -.5f);
-		sierpinskiSimplex.translate(translation);
+		sierpinskiSimplex = ShapeND.sierpinskiSimplex(baseSimplex,3);
 		scale = width / viewWidth;
 		strokeWeight(1/scale);
 	}
@@ -37,16 +30,14 @@ public class SimplexRender extends PApplet
 		scale(scale,-scale);
 		//baseSimplex.rotate(0, 3, (float) (Math.PI/480));
 		ShapeND sierpinskiSimplexRot = sierpinskiSimplex.copy();
-		sierpinskiSimplexRot.rotate(0, 2, (float)Math.PI/6);
-		sierpinskiSimplexRot.rotate(1,2,-(float)Math.PI/6);
-		VecND trans = VecND.generateOrigin(5);
-		trans.setCoord(2,3);
+//		sierpinskiSimplexRot.rotate(0, 2, (float)Math.PI/6);
+//		sierpinskiSimplexRot.rotate(1,2,-(float)Math.PI/6);
+		VecND trans = VecND.generateOrigin(4);
+		trans.setCoord(2,4);
 		trans.setCoord(3,4);
-		trans.setCoord(4, 3);
 		sierpinskiSimplexRot.translate(trans);
 		sierpinskiSimplexRot = sierpinskiSimplexRot.stereographicDown();
 		sierpinskiSimplexRot = sierpinskiSimplexRot.stereographicDown();
-		//sierpinskiSimplexRot = sierpinskiSimplexRot.stereographicDown();
 		ProcessingNDTools.drawShape2D(this,sierpinskiSimplexRot);
 		popMatrix();
 	}
@@ -54,7 +45,7 @@ public class SimplexRender extends PApplet
 	{
 		float x = (float) (Math.PI / 480) * (mouseX - pmouseX);
 		float y = -(float) (Math.PI / 480) * (mouseY - pmouseY);
-		sierpinskiSimplex.rotate(3,4,x);
-		sierpinskiSimplex.rotate(2,4,y);
+		sierpinskiSimplex.rotate(0,2,x);
+		sierpinskiSimplex.rotate(2,3,y);
 	}
 }

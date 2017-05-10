@@ -25,28 +25,29 @@ public class ShapeND
   {
 	  ArrayList<VecND> vertices = new ArrayList<VecND>();
 	  ArrayList<Edge> edges = new ArrayList<Edge>();
+	  vertices.add(VecND.generateOrigin(dimension));
+	  ShapeND s = new ShapeND(vertices,edges);
 	  VecND newVert;
-	  if(dimension == 0)
+	  float newCoord;
+	  for(int i = 0; i < dimension; i++)
 	  {
-		  vertices.add(VecND.generateOrigin(0));
+		  newCoord = s.calcOrigin().copy().add(s.getVertex(0).copy().mult(-1)).getMagnitude();
+		  newCoord = (float) Math.sqrt(1 - newCoord * newCoord);
+		  newVert = s.getOrigin().copy();
+		  newVert.setCoord(i, newCoord);
+		  s.addVertex(newVert);
 	  }
-	  else
+	  for(int i = 0; i < s.getVertices().size(); i++)
 	  {
-		  for(int i = 0; i < dimension + 1; i++)
+		  for(int j = 0; j < s.getVertices().size(); j++)
 		  {
-			  for(int j = 0; j < dimension + 1; j++)
+			  if(i != j)
 			  {
-				  if(i != j)
-				  {
-					  edges.add(new Edge(i,j));
-				  }
+				  s.addEdge(new Edge(i,j));
 			  }
-			  newVert = VecND.generateOrigin(dimension+1);
-			  newVert.setCoord(i, 1);
-			  vertices.add(newVert.copy());
 		  }
 	  }
-	  ShapeND s = new ShapeND(vertices,edges);
+	  s.translate(s.calcOrigin().copy().mult(-1));
 	  return s;
   }
   
