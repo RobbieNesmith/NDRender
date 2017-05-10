@@ -21,6 +21,76 @@ public class ShapeND
 	  return measure;
   }
   
+  public static ShapeND generateSimplex(int dimension)
+  {
+	  ArrayList<VecND> vertices = new ArrayList<VecND>();
+	  ArrayList<Edge> edges = new ArrayList<Edge>();
+	  VecND newVert;
+	  if(dimension == 0)
+	  {
+		  vertices.add(VecND.generateOrigin(0));
+	  }
+	  else
+	  {
+		  for(int i = 0; i < dimension + 1; i++)
+		  {
+			  for(int j = 0; j < dimension + 1; j++)
+			  {
+				  if(i != j)
+				  {
+					  edges.add(new Edge(i,j));
+				  }
+			  }
+			  newVert = VecND.generateOrigin(dimension+1);
+			  newVert.setCoord(i, 1);
+			  vertices.add(newVert.copy());
+		  }
+	  }
+	  ShapeND s = new ShapeND(vertices,edges);
+	  return s;
+  }
+  
+  public static ShapeND sierpinskiSimplex(ShapeND parentSimplex, int iters)
+  {
+	  if(iters == 0)
+	  {
+		  int numVerts = parentSimplex.getVertices().size();
+		  parentSimplex.setEdges(new ArrayList<Edge>());
+		  for(int i = 0; i < numVerts; i++)
+		  {
+			  for(int j = 0; j < numVerts; j++)
+			  {
+				  if(i != j)
+				  {
+					  parentSimplex.addEdge(new Edge(i,j));
+				  }
+			  }
+		  }
+		  return parentSimplex;
+	  }
+	  else
+	  {
+		  ShapeND result = new ShapeND();
+		  int numVerts = parentSimplex.getVertices().size();
+		  for(int i = 0; i < numVerts; i++)
+		  {
+			  ShapeND newSimplex = new ShapeND();
+			  newSimplex.addVertex(parentSimplex.getVertex(i));
+			  for(int j = 0; j < numVerts; j++)
+			  {
+				  if(i != j)
+				  {
+					  VecND newVert = parentSimplex.getVertex(j).copy().add(parentSimplex.getVertex(i)).mult(0.5f);
+					  newSimplex.addVertex(newVert);
+				  }
+				  result.join(sierpinskiSimplex(newSimplex, iters-1));
+			  }
+		  }
+		  result.removeDoubles();
+		  return result;
+	  }
+  }
+  
   public ShapeND()
   {
 	  this.vertices = new ArrayList<VecND>();
@@ -45,6 +115,11 @@ public class ShapeND
   public ArrayList<VecND> getVertices()
   {
     return this.vertices;
+  }
+  
+  public void setVertices(ArrayList<VecND> vertices)
+  {
+	  this.vertices = vertices;
   }
   
   public VecND getVertex(int id)
@@ -72,6 +147,11 @@ public class ShapeND
     return this.edges;
   }
   
+  public void setEdges(ArrayList<Edge> edges)
+  {
+	  this.edges = edges;
+  }
+  
   public Edge getEdge(int id)
   {
 	  return this.edges.get(id);
@@ -95,6 +175,55 @@ public class ShapeND
   public int getNumEdges()
   {
     return this.edges.size();
+  }
+  public void removeDoubles(float mergeDist)
+  {
+	  for(int i = 0; i < this.getVertices().size(); i++)
+	  {
+		  for(int j = 0; j < this.getVertices().size(); j++)
+		  {
+			  if(i != j)
+			  {
+				  VecND diff = this.getVertex(i).copy().add((this.getVertex(j)).copy().mult(-1));
+				  float dist = diff.getMagnitude();
+				  if(dist < mergeDist)
+				  {
+					  for(int k = this.getEdges().size() - 1; k >= 0; k--)
+					  {
+						  Edge e = this.getEdge(k);
+						  if(e.getStart() == j)
+						  {
+							  e.setStart(i);
+						  }
+						  if(e.getEnd() == j)
+						  {
+							  e.setEnd(i);
+						  }
+						  if(e.isTrivial())
+						  {
+							  this.getEdges().remove(k);
+						  }
+					  }
+					  this.getVertices().remove(j);
+				  }
+			  }
+		  }
+	  }
+	  for(int i = 0; i < this.getEdges().size(); i++)
+	  {
+		  for(int j = this.getEdges().size() - 1; j > i; j--)
+		  {
+			  if(this.getEdge(i).equals(this.getEdge(j)))
+			  {
+				  this.getEdges().remove(j);
+			  }
+		  }
+	  }
+  }
+  
+  public void removeDoubles()
+  {
+	  removeDoubles(0.0001f);
   }
   
   public int getDim()

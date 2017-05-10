@@ -16,12 +16,13 @@ public class FourDimDemo extends PApplet
 	}
 	public void setup()
 	{
-		cube = ShapeND.generateMeasure(4);
-		VecND translation = VecND.generateOrigin(4);
+		cube = ShapeND.generateSimplex(4);
+		VecND translation = VecND.generateOrigin(5);
 		translation.setCoord(0, -.5f);
 		translation.setCoord(1, -.5f);
 		translation.setCoord(2, -.5f);
 		translation.setCoord(3, -.5f);
+		translation.setCoord(4, -.5f);
 		cube.translate(translation);
 		scale = width / viewWidth;
 		strokeWeight(1/scale);
@@ -36,14 +37,16 @@ public class FourDimDemo extends PApplet
 		ShapeND cubeRot = cube.copy();
 		cubeRot.rotate(0, 2, (float)Math.PI/6);
 		cubeRot.rotate(1,2,-(float)Math.PI/6);
-		VecND trans = VecND.generateOrigin(4);
+		VecND trans = VecND.generateOrigin(5);
 		trans.setCoord(2,3);
 		trans.setCoord(3,2);
+		trans.setCoord(4,2);
 		cubeRot.translate(trans);
 		cubeRot = cubeRot.stereographicDown();
 		cubeRot = cubeRot.stereographicDown();
+		cubeRot = cubeRot.stereographicDown();
 		ProcessingNDTools.drawShape2D(this,cubeRot);
-		ProcessingNDTools.drawVertices2D(this, cubeRot, 32/scale);
+		//ProcessingNDTools.drawVertices2D(this, cubeRot, 32/scale);
 		popMatrix();
 	}
 	public void mouseDragged()
