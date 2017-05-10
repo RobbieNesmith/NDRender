@@ -18,7 +18,7 @@ public class SimplexRender extends PApplet
 	public void setup()
 	{
 		baseSimplex = ShapeND.generateSimplex(4);
-		sierpinskiSimplex = ShapeND.sierpinskiSimplex(baseSimplex,2);
+		sierpinskiSimplex = ShapeND.sierpinskiSimplex(baseSimplex,4);
 		VecND translation = VecND.generateOrigin(5);
 		translation.setCoord(0, -.5f);
 		translation.setCoord(1, -.5f);

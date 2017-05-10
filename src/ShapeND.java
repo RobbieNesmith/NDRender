@@ -178,11 +178,12 @@ public class ShapeND
   }
   public void removeDoubles(float mergeDist)
   {
-	  for(int i = 0; i < this.getVertices().size(); i++)
+	  //System.out.println(this.getVertices().size() + " Vertices and " + this.getEdges().size() + " edges.");
+	  for(int i = 0; i < this.getVertices().size() - 1; i++)
 	  {
-		  for(int j = 0; j < this.getVertices().size(); j++)
+		  for(int j = i+1; j < this.getVertices().size(); j++)
 		  {
-			  if(i != j)
+			  if(i != j && i < this.getVertices().size() && j < this.getVertices().size())
 			  {
 				  VecND diff = this.getVertex(i).copy().add((this.getVertex(j)).copy().mult(-1));
 				  float dist = diff.getMagnitude();
@@ -195,9 +196,17 @@ public class ShapeND
 						  {
 							  e.setStart(i);
 						  }
+						  if(e.getStart() > j)
+						  {
+							  e.setStart(e.getStart() - 1);
+						  }
 						  if(e.getEnd() == j)
 						  {
 							  e.setEnd(i);
+						  }
+						  if(e.getEnd() > j)
+						  {
+							  e.setEnd(e.getEnd() - 1);
 						  }
 						  if(e.isTrivial())
 						  {
@@ -219,6 +228,7 @@ public class ShapeND
 			  }
 		  }
 	  }
+	  //System.out.println(this.getVertices().size() + " Vertices and " + this.getEdges().size() + " edges.");
   }
   
   public void removeDoubles()
